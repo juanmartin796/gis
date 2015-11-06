@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<link rel="stylesheet" href="lib/ol3/css/ol.css" type="text/css">
+	<style>
+		#map {
+			height: 400px;
+			width: 100%;
+		}
+	</style>
+	<script src="lib/ol3/build/ol.js" type="text/javascript"></script>
+
+
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>web GIS</title>
+	<link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css">
+
+	<script src="lib/jquery-1.11.3.js"></script>
+
+	<script src="js/obtenerCapas.js" type="text/javascript"></script>
+</head>
+<body>
+	<div class="container-fluid well" style="margin-bottom: 0px">
+		<div class="container">
+			<ul class="nav nav-pills">
+				<li class="active"><a href="#">Consulta</a></li>
+				<li><a href="#">Medir distancia</a></li>
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#">Capas <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<script type="text/javascript">
+							var capas= obtenerCapas();
+							for(var i = 0; i < capas.length; i ++){
+								document.write('<li><input type="checkbox" name="'+capas[i]+'" value="'+capas[i]+'">'+capas[i]+' </li>');
+							}
+
+						</script>
+					</ul>
+				</li>
+				<ul class="nav navbar-nav navbar-right">
+					<li><img src="img/logo_gis.png" width="70px" height="70px"></li>
+				</ul>
+			</ul>
+
+		</div>
+	</div>
+	<div class="container">
+		<!-- DIV que contiene el mapa -->
+		<div id="map"></div>
+	</div>
+
+	<pre class="log-container"><code id="log"></code></pre>
+
+
+	<script type="text/javascript" src="js/mapa.js"></script>
+	<!--<script type="text/javascript" src="js/capas.js"></script> -->
+	<script type="text/javascript" src="lib/bootstrap/js/bootstrap.js"></script>
+</body>
+</html>
