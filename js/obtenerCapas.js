@@ -3,7 +3,7 @@ function obtenerCapas(){
 
 	var parser = new ol.format.WMSCapabilities();
 	$.ajax({async:false, 
-		url:'http://localhost/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&MAP=/var/www/html/webgis/TPI.qgs&REQUEST=GetCapabilities'}).then(function(response) {
+		url:'http://localhost/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&MAP=/var/www/html/webgis/qgis/TPI.qgs&REQUEST=GetCapabilities'}).then(function(response) {
 
 			var result = parser.read(response);
   //$('#log').html(window.JSON.stringify(result, null, 2));
@@ -14,6 +14,6 @@ function obtenerCapas(){
   	capas.push(capability[i].Name);
   }
   
-});
-		return capas;
-	}
+	});
+	return capas;
+}

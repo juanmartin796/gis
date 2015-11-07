@@ -15,7 +15,7 @@ var capas=[];
 
 var parser = new ol.format.WMSCapabilities();
 $.ajax({async:false, 
-    url:'http://localhost/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&MAP=/var/www/html/webgis/TPI.qgs&REQUEST=GetCapabilities'}).then(function(response) {
+    url:'http://localhost/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&MAP=/var/www/html/webgis/qgis/TPI.qgs&REQUEST=GetCapabilities'}).then(function(response) {
 
   var result = parser.read(response);
   //$('#log').html(window.JSON.stringify(result, null, 2));
@@ -27,7 +27,7 @@ $.ajax({async:false,
                         title: capability[i].Title,
                         visible: false,
                         source: new ol.source.ImageWMS({//fuente de datos (ImageWMS)
-                        url: '/cgi-bin/qgis_mapserv.fcgi?map=/var/www/html/webgis/TPI.qgs',
+                        url: '/cgi-bin/qgis_mapserv.fcgi?map=/var/www/html/webgis/qgis/TPI.qgs',
 
                         params: {LAYERS: capability[i].Name}//por defecto version WMS = 1.3.0
                     })
