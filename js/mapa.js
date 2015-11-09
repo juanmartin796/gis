@@ -1,4 +1,5 @@
 var capas=[];
+var nombre_capas;
 
 function dibujarCapas(){
 
@@ -53,4 +54,38 @@ function agregarCapas(capas){
 
 function obtenerArregloCapas(){
     return capas;
+}
+
+function crear_checkbox_capas(){
+    nombre_capas= obtenerCapas();
+    for(var i = 0; i < nombre_capas.length; i ++){
+        document.write('<li><input type="checkbox" name='+nombre_capas[i]+' id="checkbox_'+nombre_capas[i]+'" value="'+ nombre_capas[i]+'">'+nombre_capas[i]+' </li>');
+    }
+}
+
+function act_des_capas(){
+    var capas_del_mapa= obtenerArregloCapas();
+
+        for (var i = 0; i <capas_del_mapa.length; i++) {
+            document.getElementById("checkbox_"+nombre_capas[i]).addEventListener('change', function () {
+                var checked = this.checked;
+                //seteo la propiedad "visible" de mi capa en función al valor
+                var pos= nombre_capas.indexOf(this.name);
+                if (checked !== capas_del_mapa[pos].getVisible()) {
+                    capas_del_mapa[pos].setVisible(checked);
+                }
+            });
+             //agrego un listener al evento change de la
+            //propiedad "visible" de la capa
+            capas_del_mapa[i].on('change:visible', function () {
+                var nombre_de_esta_capa = this.getProperties().title;
+                var visible = this.getVisible();
+                //seteo el valor del checkbox
+                if (visible !== document.getElementById("checkbox_"+nombre_de_esta_capa).checked) {
+                    document.getElementById("checkbox_"+nombre_de_esta_capa).checked = visible;
+                }
+            });
+
+
+        };
 }

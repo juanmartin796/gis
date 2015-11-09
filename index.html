@@ -29,10 +29,7 @@
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Capas <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<script type="text/javascript">
-								var nombre_capas= obtenerCapas();
-								for(var i = 0; i < nombre_capas.length; i ++){
-									document.write('<li><input type="checkbox" name='+nombre_capas[i]+' id="checkbox_'+nombre_capas[i]+'" value="'+ nombre_capas[i]+'">'+nombre_capas[i]+' </li>');
-								}
+								crear_checkbox_capas();
 							</script>
 						</ul>
 					</li>
@@ -54,40 +51,8 @@
 
 	<script type="text/javascript"> 
 		dibujarCapas()
-		var capas_del_mapa= obtenerArregloCapas();
-
-		for (var i = 0; i <capas_del_mapa.length; i++) {
-			//eval('var variable' + i + ' = "valor_"+i');
-			eval('var checkbox_'+i+'= document.getElementById("checkbox_"+nombre_capas[i])');
-
-
-			//alert(eval('checkbox_'+i));
-			//document.getElementById('checkbox_'+nombre_capas[i])
-			eval('checkbox_'+i).addEventListener('change', function () {
-				var checked = this.checked;
-                //seteo la propiedad "visible" de mi capa en función al valor
-                var pos= nombre_capas.indexOf(this.name);
-                if (checked !== capas_del_mapa[pos].getVisible()) {
-                	capas_del_mapa[pos].setVisible(checked);
-                }
-            });
-           	 //agrego un listener al evento change de la
-            //propiedad "visible" de la capa
-            capas_del_mapa[i].on('change:visible', function () {
-            	var nombre_de_esta_capa = this.getProperties().title;
-            	var visible = this.getVisible();
-                //seteo el valor del checkbox
-                if (visible !== eval('checkbox_'+nombre_de_esta_capa).checked) {
-                	eval('checkbox_'+nombre_de_esta_capa).checked = visible;
-                }
-            });
-
-
-        };
+		act_des_capas();
     </script>
-
-
-
 
     <!--<script type="text/javascript" src="js/capas.js"></script> -->
     <script type="text/javascript" src="lib/bootstrap/js/bootstrap.js"></script>
