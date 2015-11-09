@@ -19,25 +19,25 @@
 	<script src="lib/jquery-1.11.3.js"></script>
 
 	<script src="js/obtenerCapas.js" type="text/javascript"></script>
+	<script src="js/mapa.js" type="text/javascript"></script>
 </head>
 <body>
 	<div class="container-fluid well" style="margin-bottom: 0px">
 		<div class="container">
 			<ul class="nav nav-pills">
-				<li class="active"><a href="#">Consulta</a></li>
+				<li class="dropdown active">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Capas <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<script type="text/javascript">
+								var nombre_capas= obtenerCapas();
+								for(var i = 0; i < nombre_capas.length; i ++){
+									document.write('<li><input type="checkbox" name='+nombre_capas[i]+' id="checkbox_'+nombre_capas[i]+'" value="'+ nombre_capas[i]+'">'+nombre_capas[i]+' </li>');
+								}
+							</script>
+						</ul>
+					</li>
+				<li><a href="#">Consulta</a></li>
 				<li><a href="#">Medir distancia</a></li>
-				<li class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#">Capas <b class="caret"></b></a>
-					<ul class="dropdown-menu">
-						<script type="text/javascript">
-							var capas= obtenerCapas();
-							for(var i = 0; i < capas.length; i ++){
-								document.write('<li><input type="checkbox" name="checkbox_'+capas[i]+'" value="'+capas[i]+'">'+capas[i]+' </li>');
-							}
-
-						</script>
-					</ul>
-				</li>
 				<ul class="nav navbar-nav navbar-right">
 					<li><img src="img/logo_gis.png" width="70px" height="70px"></li>
 				</ul>
@@ -52,9 +52,44 @@
 
 	<pre class="log-container"><code id="log"></code></pre>
 
+	<script type="text/javascript"> 
+		dibujarCapas()
+		var capas_del_mapa= obtenerArregloCapas();
 
-	<script type="text/javascript" src="js/mapa.js"></script>
-	<!--<script type="text/javascript" src="js/capas.js"></script> -->
-	<script type="text/javascript" src="lib/bootstrap/js/bootstrap.js"></script>
+		for (var i = 0; i <capas_del_mapa.length; i++) {
+			//eval('var variable' + i + ' = "valor_"+i');
+			eval('var checkbox_'+i+'= document.getElementById("checkbox_"+nombre_capas[i])');
+
+
+			//alert(eval('checkbox_'+i));
+			//document.getElementById('checkbox_'+nombre_capas[i])
+			eval('checkbox_'+i).addEventListener('change', function () {
+				var checked = this.checked;
+                //seteo la propiedad "visible" de mi capa en función al valor
+                var pos= nombre_capas.indexOf(this.name);
+                if (checked !== capas_del_mapa[pos].getVisible()) {
+                	capas_del_mapa[pos].setVisible(checked);
+                }
+            });
+           	 //agrego un listener al evento change de la
+            //propiedad "visible" de la capa
+            capas_del_mapa[i].on('change:visible', function () {
+            	var nombre_de_esta_capa = this.getProperties().title;
+            	var visible = this.getVisible();
+                //seteo el valor del checkbox
+                if (visible !== eval('checkbox_'+nombre_de_esta_capa).checked) {
+                	eval('checkbox_'+nombre_de_esta_capa).checked = visible;
+                }
+            });
+
+
+        };
+    </script>
+
+
+
+
+    <!--<script type="text/javascript" src="js/capas.js"></script> -->
+    <script type="text/javascript" src="lib/bootstrap/js/bootstrap.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 function obtenerCapas(){
-	var capas=[];
+	var capa2=[];
 
 	var parser = new ol.format.WMSCapabilities();
 	$.ajax({async:false, 
@@ -11,9 +11,9 @@ function obtenerCapas(){
   var capability = result.Capability.Layer.Layer;
   //$('#log').html(window.JSON.stringify(capability, null, 2));
   for(var i = 0; i < capability.length; i ++){
-  	capas.push(capability[i].Name);
+  	capa2.push(capability[i].Name);
   }
   
 	});
-	return capas;
+	return capa2;
 }

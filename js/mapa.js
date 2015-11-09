@@ -1,6 +1,39 @@
-
 var capas=[];
-  capas.push(new ol.layer.Tile({//objeto capa de tipo Tile (Mosaico de Imagenes)
+
+function dibujarCapas(){
+
+  var parser = new ol.format.WMSCapabilities();
+  $.ajax({async:false, 
+    url:'http://localhost/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&MAP=/var/www/html/webgis/qgis/TPI.qgs&REQUEST=GetCapabilities'}).then(function(response) {
+
+      var result = parser.read(response);
+  //$('#log').html(window.JSON.stringify(result, null, 2));
+
+  var capability = result.Capability.Layer.Layer;
+  //$('#log').html(window.JSON.stringify(capability, null, 2));
+  for(var i = 0; i < capability.length; i ++){
+                capas.push(new ol.layer.Image({//objeto capa de tipo Imagen (1 sola imagen)
+                    title: capability[i].Title,
+                    visible: false,
+                        source: new ol.source.ImageWMS({//fuente de datos (ImageWMS)
+                            url: '/cgi-bin/qgis_mapserv.fcgi?map=/var/www/html/webgis/qgis/TPI.qgs',
+
+                        params: {LAYERS: capability[i].Name}//por defecto version WMS = 1.3.0
+                    })
+                    }));
+            }
+
+        });
+
+    //setTimeout("agregarCapas(capas)", 100);
+    agregarCapas(capas);
+}
+
+function agregarCapas(capas){
+// creo un objeto mapa de la clase ol.Map y lo asigno a una variable llamada map
+    var map = new ol.Map({// el constructor de la clase ol.Map toma como parametro un obj. con la configuracion
+        target: 'map', //elemento HTML en el que se va a ubicar el mapa (en este caso referenciado por el id)
+        layers: [new ol.layer.Tile({//objeto capa de tipo Tile (Mosaico de Imagenes)
                         title: "Natural Earth Base Map", //titulo de la capa
                         source: new ol.source.TileWMS({//fuente de datos de la capa (TileWMS)
                             url: 'http://demo.boundlessgeo.com/geoserver/wms', //url del servicio WMS
@@ -9,45 +42,15 @@ var capas=[];
                                 VERSION: '1.1.1' //version del estandar WMS
                             }
                         })
-                    }));
+                    })].concat(capas), //fin de mi array de capas
+        view: new ol.View({//todo mapa debe tener una vista
+            projection: 'EPSG:4326', //CRS de la vista
+            center: [-59, -27.5], //coordenadas del centro de la vista inicial [lon, lat]
+            zoom: 4 //nivel de zoom inicial (OL3 usa escalas fijas)
+        })
+    });
+}
 
-
-
-var parser = new ol.format.WMSCapabilities();
-$.ajax({async:false, 
-    url:'http://localhost/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&MAP=/var/www/html/webgis/qgis/TPI.qgs&REQUEST=GetCapabilities'}).then(function(response) {
-
-  var result = parser.read(response);
-  //$('#log').html(window.JSON.stringify(result, null, 2));
-
-  var capability = result.Capability.Layer.Layer;
-  //$('#log').html(window.JSON.stringify(capability, null, 2));
-  for(var i = 0; i < capability.length; i ++){
-                capas.push(new ol.layer.Image({//objeto capa de tipo Imagen (1 sola imagen)
-                        title: capability[i].Title,
-                        visible: false,
-                        source: new ol.source.ImageWMS({//fuente de datos (ImageWMS)
-                        url: '/cgi-bin/qgis_mapserv.fcgi?map=/var/www/html/webgis/qgis/TPI.qgs',
-
-                        params: {LAYERS: capability[i].Name}//por defecto version WMS = 1.3.0
-                    })
-                }));
-            }
-                
-});
-
-//setTimeout("agregarCapas(capas)", 100);
-agregarCapas(capas);
-
-function agregarCapas(capas){
-// creo un objeto mapa de la clase ol.Map y lo asigno a una variable llamada map
-            var map = new ol.Map({// el constructor de la clase ol.Map toma como parametro un obj. con la configuracion
-                target: 'map', //elemento HTML en el que se va a ubicar el mapa (en este caso referenciado por el id)
-                layers: capas, //fin de mi array de capas
-                view: new ol.View({//todo mapa debe tener una vista
-                    projection: 'EPSG:4326', //CRS de la vista
-                    center: [-59, -27.5], //coordenadas del centro de la vista inicial [lon, lat]
-                    zoom: 4 //nivel de zoom inicial (OL3 usa escalas fijas)
-                })
-            });
-        }
+function obtenerArregloCapas(){
+    return capas;
+}
