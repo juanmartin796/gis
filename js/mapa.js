@@ -1,5 +1,6 @@
 var capas=[];
 var nombre_capas;
+var map;
 
 function dibujarCapas(){
 
@@ -32,7 +33,7 @@ function dibujarCapas(){
 
 function agregarCapas(capas){
 // creo un objeto mapa de la clase ol.Map y lo asigno a una variable llamada map
-    var map = new ol.Map({// el constructor de la clase ol.Map toma como parametro un obj. con la configuracion
+    map = new ol.Map({// el constructor de la clase ol.Map toma como parametro un obj. con la configuracion
         target: 'map', //elemento HTML en el que se va a ubicar el mapa (en este caso referenciado por el id)
         layers: [new ol.layer.Tile({//objeto capa de tipo Tile (Mosaico de Imagenes)
                         title: "Natural Earth Base Map", //titulo de la capa
@@ -89,3 +90,47 @@ function act_des_capas(){
 
         };
 }
+
+ var selectInteraction = new ol.interaction.DragBox(
+                {
+                    condition: ol.events.condition.always, //noModifierKeys
+                    style: new ol.style.Style({
+                        stroke: new ol.style.Stroke({
+                            color: [0, 0, 255, 1]
+                        })
+                    })
+                }
+);
+
+
+selectInteraction.on('boxend', function (evt) {
+    //this: referencia al selectInteraction
+    console.log('boxend', this.getGeometry().getCoordinates());
+
+});
+
+function control_consulta_navegacion(el){
+    if (el.title == "consulta") {
+        //agrego la interaccion del dragbox
+        //la cual tiene precedencia sobre las otras
+        map.addInteraction(selectInteraction);
+
+        //subscribo una funcion al evento click del mapa
+        map.on('click', clickEnMapa);
+
+    } else if (el.title == "navegacion") {
+        //la remuevo...
+        map.removeInteraction(selectInteraction);
+        //remueveo la subscripcion de la funcion al evento click del mapa
+        map.un('click', clickEnMapa);
+    }
+    //muestro por consola el valor
+    console.log(el.value);
+}
+
+//funcion para el evento click en el mapa
+function clickEnMapa(evt) {
+    //muestro por consola las coordenadas del evento
+    console.log('click',evt.coordinate);
+    alert(evt.coordinate);
+};
