@@ -1,8 +1,33 @@
+var draw;
+var vector;
+var measureTooltip;
+  var helpTooltip;
 function medir_distancia(){
     var wgs84Sphere = new ol.Sphere(6378137);
 
 
     var source = new ol.source.Vector();
+    vector = new ol.layer.Vector({
+        title:"lineas_medicion",
+        source: source,
+        style: new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.2)'
+                }),
+            stroke: new ol.style.Stroke({
+                color: '#ffcc33',
+                width: 2
+            }),
+            image: new ol.style.Circle({
+                radius: 7,
+                fill: new ol.style.Fill({
+                color: '#ffcc33'
+                })
+            })
+        })
+    });
+
+    map.addLayer(vector);
 
 
     /**
@@ -23,7 +48,7 @@ function medir_distancia(){
      * Overlay to show the help messages.
      * @type {ol.Overlay}
      */
-     var helpTooltip;
+   
 
 
     /**
@@ -37,7 +62,7 @@ function medir_distancia(){
      * Overlay to show the measurement.
      * @type {ol.Overlay}
      */
-     var measureTooltip;
+     
 
 
     /**
@@ -80,13 +105,13 @@ function medir_distancia(){
     $(helpTooltipElement).removeClass('hidden');
     };
 
-    map.on('pointermove', pointerMoveHandler);
+    //map.on('pointermove', pointerMoveHandler);
 
     $(map.getViewport()).on('mouseout', function() {
       $(helpTooltipElement).addClass('hidden');
     });
 
-    var draw; // global so we can remove it later
+     // global so we can remove it later
     function addInteraction() {
       //var type = (typeSelect.value == 'area' ? 'Polygon' : 'LineString');
       var type = ("Lenght" == 'area' ? 'Polygon' : 'LineString');
@@ -113,7 +138,7 @@ function medir_distancia(){
         })
       })
     });
-      map.addInteraction(draw);
+      //map.addInteraction(draw);
 
       createMeasureTooltip();
       createHelpTooltip();

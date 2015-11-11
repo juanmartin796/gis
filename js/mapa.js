@@ -91,6 +91,9 @@ function act_des_capas(){
         };
 }
 
+
+
+
  var selectInteraction = new ol.interaction.DragBox(
                 {
                     condition: ol.events.condition.always, //noModifierKeys
@@ -114,15 +117,26 @@ function control_consulta_navegacion(el){
         //agrego la interaccion del dragbox
         //la cual tiene precedencia sobre las otras
         map.addInteraction(selectInteraction);
+        map.removeInteraction(draw);
 
         //subscribo una funcion al evento click del mapa
         map.on('click', clickEnMapa);
-
+        
+        borrar_lineas_medicion();
     } else if (el.title == "navegacion") {
         //la remuevo...
         map.removeInteraction(selectInteraction);
+        map.removeInteraction(draw);
         //remueveo la subscripcion de la funcion al evento click del mapa
         map.un('click', clickEnMapa);
+        borrar_lineas_medicion();
+    } else if (el.title=="medicion"){
+         map.removeInteraction(selectInteraction);
+         map.un('click', clickEnMapa);
+         medir_distancia();
+         map.addInteraction(draw);
+
+
     }
     //muestro por consola el valor
     console.log(el.value);
@@ -134,3 +148,9 @@ function clickEnMapa(evt) {
     console.log('click',evt.coordinate);
     alert(evt.coordinate);
 };
+
+function borrar_lineas_medicion(){
+    map.removeLayer(vector);
+    map.getOverlays().clear();
+}
+
