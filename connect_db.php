@@ -18,22 +18,28 @@
 	   }
 	}
 
-	function consulta_sql(){
+	function consulta_sql($tabla, $coordX, $coordY){
 		//$db= conectar_db();
 		GLOBAL $db;
-			$result = pg_query($db, "SELECT * FROM actividades_agropecuarias");
+			$result = pg_query($db,"
+				SELECT *
+				FROM $tabla
+				WHERE ST_Intersects(geom, ST_GeomFromText('POINT($coordX $coordY)',4326));
+				");
 		if (!$result) {
 		  echo "An error occurred.\n";
 		  exit;
 		}
 
-		$long= pg_num_rows($result);
-		echo 'Cantidad de registros: '.$long."<br />\n";
+		$num_registros= pg_num_rows($result);
+		$num_campos= pg_num_fields($result);
+		echo 'Cantidad de registros: '.$num_registros.", campos: ".$num_campos."\n";
 		
 		while ($row = pg_fetch_row($result)) {
-
-		  echo "Author: $row[0]";
-		  echo "<br />\n";
+			for ($i=0; $i<$num_campos-1;$i++){
+				 echo "Author: $row[$i]";
+				 echo "\n";
+			}
 		}
 	}
 ?>

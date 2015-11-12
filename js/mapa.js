@@ -1,5 +1,6 @@
 var capas=[];
 var nombre_capas;
+var capa_activa;
 var map;
 
 function dibujarCapas(){
@@ -21,8 +22,8 @@ function dibujarCapas(){
                             url: '/cgi-bin/qgis_mapserv.fcgi?map=/var/www/html/webgis/qgis/TPI.qgs',
 
                         params: {LAYERS: capability[i].Name}//por defecto version WMS = 1.3.0
-                    })
-                    }));
+                        })
+                }));
             }
 
         });
@@ -60,7 +61,7 @@ function obtenerArregloCapas(){
 function crear_checkbox_capas(){
     nombre_capas= obtenerCapas();
     for(var i = 0; i < nombre_capas.length; i ++){
-        document.write('<li><input type="checkbox" name='+nombre_capas[i]+' id="checkbox_'+nombre_capas[i]+'" value="'+ nombre_capas[i]+'">'+nombre_capas[i]+' </li>');
+        document.write('<li value="'+nombre_capas[i]+'"> <a href="#"> <input type="checkbox" name='+nombre_capas[i]+' id="checkbox_'+nombre_capas[i]+'" value="'+ nombre_capas[i]+'">'+nombre_capas[i]+'</a></li>');
     }
 }
 
@@ -74,6 +75,7 @@ function act_des_capas(){
                 var pos= nombre_capas.indexOf(this.name);
                 if (checked !== capas_del_mapa[pos].getVisible()) {
                     capas_del_mapa[pos].setVisible(checked);
+                    capa_activa= capas_del_mapa[pos].get('title');
                 }
             });
              //agrego un listener al evento change de la
@@ -146,7 +148,24 @@ function control_consulta_navegacion(el){
 function clickEnMapa(evt) {
     //muestro por consola las coordenadas del evento
     console.log('click',evt.coordinate);
-    alert(evt.coordinate);
+    //alert(evt.coordinate[1]);
+
+    $.ajax({
+        type: "POST",
+        url: "realizar_consulta.php",
+        data: { 
+                nom_capa: capa_activa,
+                coordX: evt.coordinate[0],
+                coordY: evt.coordinate[1],
+            }
+        }).done(function( msg ) {
+        alert( "Los datos que se recibieron: " + msg );
+    });
+
+
+
+
+
 };
 
 function borrar_lineas_medicion(){

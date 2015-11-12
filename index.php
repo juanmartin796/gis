@@ -25,16 +25,12 @@
 	<?php include ('connect_db.php') ?>
 </head>
 <body>
-<?php 
-	conectar_db();
-	consulta_sql();
-?>
 	<div class="container-fluid well" style="margin-bottom: 0px">
 		<div class="container">
 			<div class="row" style="display: flex; align-items: flex-end;">
 				<div class="col-xs-11">
 					<ul class="nav nav-pills">
-						<li class="dropdown">
+						<li class="dropdown pestana">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">Capas <b classhandleMeasurements="caret"></b></a>
 							<ul class="dropdown-menu">
 								<script type="text/javascript">
@@ -42,16 +38,25 @@
 								</script>
 							</ul>
 						</li>
-						<li id="li_navegacion" class="active"><a title="navegacion" href="#" onclick="javascript:control_consulta_navegacion(this)">Navegacion</a></li>
-						<li id="li_consulta"><a title="consulta" href="#" onclick="javascript:control_consulta_navegacion(this)">Consulta</a></li>
-						<li><a title="medicion" href="#" onclick="javascript:control_consulta_navegacion(this)">Medir distancia</a></li>
-						<li> <a title="connect_db" href="#" onclick="">Conectar</a> </li>
+						<li id="li_navegacion" class="active pestana"><a title="navegacion" href="#" onclick="javascript:control_consulta_navegacion(this)">Navegacion</a></li>
+						<li id="li_consulta" class="pestana"><a title="consulta" href="#" onclick="javascript:control_consulta_navegacion(this)">Consulta</a></li>
+						<li class="pestana"><a title="medicion" href="#" onclick="javascript:control_consulta_navegacion(this)">Medir distancia</a></li>
+						<li class="pestana"> <a title="connect_db" href="#" onclick="">Conectar</a> </li>
 
 					</ul>
 					<script type="text/javascript"> //para que cambie de color el tab seleccionado
 						$(".nav a").on("click", function(){
-				            $(".nav").find(".active").removeClass("active");
+				            //$(".nav").find(".active").removeClass("active");
+				            $(".nav").find(".pestana").removeClass("active");
 				            $(this).parent().addClass("active");
+				        });
+
+						//para que cambie el color de la capa que se encuentra activa
+				        $(".dropdown-menu li").on("click", function(){
+				        	capa_activa= $(this).attr('value');
+				        	//alert(capa_activa);
+				            $(".dropdown-menu").find(".active").removeClass("active");
+				            $(this).addClass("active");
 				        });
 					</script>
 				</div>
