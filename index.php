@@ -22,8 +22,13 @@
 	<script src="js/obtenerCapas.js" type="text/javascript"></script>
 	<script src="js/mapa.js" type="text/javascript"></script>
 	<script src="js/medicion.js" type="text/javascript"></script>
+	<?php include ('connect_db.php') ?>
 </head>
 <body>
+<?php 
+	conectar_db();
+	consulta_sql();
+?>
 	<div class="container-fluid well" style="margin-bottom: 0px">
 		<div class="container">
 			<div class="row" style="display: flex; align-items: flex-end;">
@@ -40,6 +45,8 @@
 						<li id="li_navegacion" class="active"><a title="navegacion" href="#" onclick="javascript:control_consulta_navegacion(this)">Navegacion</a></li>
 						<li id="li_consulta"><a title="consulta" href="#" onclick="javascript:control_consulta_navegacion(this)">Consulta</a></li>
 						<li><a title="medicion" href="#" onclick="javascript:control_consulta_navegacion(this)">Medir distancia</a></li>
+						<li> <a title="connect_db" href="#" onclick="">Conectar</a> </li>
+
 					</ul>
 					<script type="text/javascript"> //para que cambie de color el tab seleccionado
 						$(".nav a").on("click", function(){
@@ -63,6 +70,10 @@
 		dibujarCapas()
 		act_des_capas();
 	</script>
+
+	    <?php
+    	echo "hola";
+    ?>
 
 	<!--<script type="text/javascript" src="js/capas.js"></script> -->
 	<script type="text/javascript" src="lib/bootstrap/js/bootstrap.js"></script>
