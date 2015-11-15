@@ -32,6 +32,9 @@ function dibujarCapas(){
     agregarCapas(capas);
 }
 
+var scaleLineControl = new ol.control.ScaleLine();
+scaleLineControl.setUnits('metric');
+
 function agregarCapas(capas){
 // creo un objeto mapa de la clase ol.Map y lo asigno a una variable llamada map
     map = new ol.Map({// el constructor de la clase ol.Map toma como parametro un obj. con la configuracion
@@ -50,7 +53,16 @@ function agregarCapas(capas){
             projection: 'EPSG:4326', //CRS de la vista
             center: [-59, -27.5], //coordenadas del centro de la vista inicial [lon, lat]
             zoom: 4 //nivel de zoom inicial (OL3 usa escalas fijas)
-        })
+        }),
+
+        //para la escala del mapa
+        controls: ol.control.defaults({
+            attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+              collapsible: false
+            })
+          }).extend([
+            scaleLineControl
+          ])
     });
 }
 
