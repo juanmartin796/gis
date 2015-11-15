@@ -37,7 +37,7 @@
 		//echo 'Cantidad de registros: '.$num_registros.", campos: ".$num_campos."\n";
 		
 		while ($row = pg_fetch_row($result)) {
-			for ($i=0; $i<$num_campos-1;$i+=2){
+			for ($i=0; $i<$num_campos-1;$i++){
 				$nom_campos= pg_field_name($result,$i);
 				echo '<div class="row">';
 
@@ -50,7 +50,8 @@
 
 				$i++;
 				$nom_campos= pg_field_name($result,$i);
-				echo '<div class="col-xs-2 text-right" style="padding-right: 0px">';
+				if ($nom_campos!='geom'){
+					echo '<div class="col-xs-2 text-right" style="padding-right: 0px">';
 				echo "<b> $nom_campos: </b>";
 				echo '</div>';
 				echo '<div class="col-xs-4" style="padding-left: 8px">';
@@ -58,6 +59,7 @@
 				echo '</div>';
 
 				echo '</div>';
+				}
 			}
 		}
 	}

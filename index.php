@@ -94,6 +94,13 @@
 		    <option>Ketchup</option> -->
 		  </select>
 		</div>
+		<script type="text/javascript">
+			$('.selectpicker').on('change', function(){
+			    var selected = $(this).find("option:selected").val();
+			    //alert(selected);
+			    refrescar_vent_modal(selected);
+			 });
+		</script>
 
       </div>
       <div class="modal-body" id="modal-body">

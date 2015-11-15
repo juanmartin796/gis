@@ -145,10 +145,15 @@ function control_consulta_navegacion(el){
 }
 
 //funcion para el evento click en el mapa
+var coordX;
+var coordY;
+
 function clickEnMapa(evt) {
     //muestro por consola las coordenadas del evento
     console.log('click',evt.coordinate);
     //alert(evt.coordinate[1]);
+    coordX= evt.coordinate[0];
+    coordY=evt.coordinate[1];
 
     $.ajax({
         type: "POST",
@@ -158,9 +163,15 @@ function clickEnMapa(evt) {
                 coordX: evt.coordinate[0],
                 coordY: evt.coordinate[1],
             }
-        }).done(function( msg ) {
-        //alert( "Los datos que se recibieron: " + msg );
-        $('#modalConsulta').modal('show');
+    }).done(function( msg ) {
+            //alert( "Los datos que se recibieron: " + msg );
+            mostrar_vent_consulta(msg);
+        
+    });
+};
+
+function mostrar_vent_consulta(msg){
+    $('#modalConsulta').modal('show');
         body_modal= document.getElementById('modal-body');
         body_modal.innerHTML=msg;
 
@@ -176,14 +187,41 @@ function clickEnMapa(evt) {
             }
         });
         lista_capas.innerHTML= lista;
+}
+
+function refrescar_vent_modal(capa_activa){
+    $.ajax({
+        type: "POST",
+        url: "realizar_consulta.php",
+        data: { 
+                nom_capa: capa_activa,
+                coordX: coordX,
+                coordY: coordY,
+            }
+    }).done(function( msg ) {
+            //alert( "Los datos que se recibieron: " + msg );
+            mostrar_vent_consulta_cambiar_capa(capa_activa, msg);
         
     });
+}
 
+function mostrar_vent_consulta_cambiar_capa(capa_actual, msg){
+     $('#modalConsulta').modal('show');
+        body_modal= document.getElementById('modal-body');
+        body_modal.innerHTML=msg;
 
-
-
-
-};
+        lista_capas= document.getElementById('lista_capas');
+        var lista;
+        $("input[type=checkbox]:checked").each(function(){
+            //alert($(this).val());
+            if ($(this).val()==capa_actual) {
+                lista+= "<option selected value="+$(this).val()+">"+ $(this).val()+"</option>";
+            }else{
+                lista+= "<option value="+$(this).val()+">"+ $(this).val()+"</option>";
+            }
+        });
+        lista_capas.innerHTML= lista;
+}
 
 function borrar_lineas_medicion(){
     map.removeLayer(vector);
