@@ -38,3 +38,11 @@
 .modal-wide .modal-dialog {
   width: 65%; /* or whatever you wish */
 }
+
+/*para el icono de la regla de medicion de distancias*/
+.icon {
+  display: inline-block;
+  width: 24px;
+  height:25px;
+  fill: currentColor;
+}

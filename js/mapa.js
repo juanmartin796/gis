@@ -36,6 +36,21 @@ var scaleLineControl = new ol.control.ScaleLine();
 scaleLineControl.setUnits('metric');
 
 function agregarCapas(capas){
+    //capa base de mapa fisico
+    /*var layers = [
+          new ol.layer.Tile({
+            source: new ol.source.MapQuest({layer: 'sat'})
+          }),
+          new ol.layer.Tile({
+            extent: [-13884991, 2870341, -7455066, 6338219],
+            source: new ol.source.TileWMS({
+              url: 'http://demo.boundlessgeo.com/geoserver/wms',
+              params: {'LAYERS': 'topp:states', 'TILED': true},
+              serverType: 'geoserver'
+            })
+          })
+        ];*/
+
 // creo un objeto mapa de la clase ol.Map y lo asigno a una variable llamada map
     map = new ol.Map({// el constructor de la clase ol.Map toma como parametro un obj. con la configuracion
         target: 'map', //elemento HTML en el que se va a ubicar el mapa (en este caso referenciado por el id)
@@ -43,12 +58,16 @@ function agregarCapas(capas){
                         title: "Natural Earth Base Map", //titulo de la capa
                         source: new ol.source.TileWMS({//fuente de datos de la capa (TileWMS)
                             url: 'http://demo.boundlessgeo.com/geoserver/wms', //url del servicio WMS
+                            //url: 'http://www.gebco.net/data_and_products/gebco_web_services/web_map_service', //url del servicio WMS
                             params: {//parametros del servicio WMS
+
                                 LAYERS: 'ne:ne', //capa(s) del servicio WMS
+                                //LAYERS: 'GEBCO_LATEST', //capa(s) del servicio WMS
                                 VERSION: '1.1.1' //version del estandar WMS
                             }
                         })
                     })].concat(capas), //fin de mi array de capas
+        //layers: layers.concat(capas),
         view: new ol.View({//todo mapa debe tener una vista
             projection: 'EPSG:4326', //CRS de la vista
             center: [-59, -27.5], //coordenadas del centro de la vista inicial [lon, lat]
