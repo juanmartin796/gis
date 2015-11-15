@@ -41,8 +41,6 @@
 						<li id="li_navegacion" class="active pestana"><a title="navegacion" href="#" onclick="javascript:control_consulta_navegacion(this)">Navegacion</a></li>
 						<li id="li_consulta" class="pestana"><a title="consulta" href="#" onclick="javascript:control_consulta_navegacion(this)">Consulta</a></li>
 						<li class="pestana"><a title="medicion" href="#" onclick="javascript:control_consulta_navegacion(this)">Medir distancia</a></li>
-						<li class="pestana"> <a title="connect_db" href="#" onclick="">Conectar</a> </li>
-
 					</ul>
 					<script type="text/javascript"> //para que cambie de color el tab seleccionado
 						$(".nav a").on("click", function(){
@@ -79,6 +77,36 @@
 	    <?php
     	echo "hola";
     ?>
+
+	
+	<!-- Ventana Modal de respuesta a la consulta -->
+<div class="modal fade modal-wide" id="modalConsulta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <!-- <h4 class="modal-title" id="myModalLabel">Capa</h4> -->
+
+		 <div class="form-group">
+		  <label for="sel1">Capa:</label>
+		  <select class="selectpicker" id="lista_capas">
+		    <!-- <option>Mustard</option>
+		    <option>Ketchup</option> -->
+		  </select>
+		</div>
+
+      </div>
+      <div class="modal-body" id="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 	<!--<script type="text/javascript" src="js/capas.js"></script> -->
 	<script type="text/javascript" src="lib/bootstrap/js/bootstrap.js"></script>

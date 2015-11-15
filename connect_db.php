@@ -33,12 +33,31 @@
 
 		$num_registros= pg_num_rows($result);
 		$num_campos= pg_num_fields($result);
-		echo 'Cantidad de registros: '.$num_registros.", campos: ".$num_campos."\n";
+		//echo "$nom_campos";
+		//echo 'Cantidad de registros: '.$num_registros.", campos: ".$num_campos."\n";
 		
 		while ($row = pg_fetch_row($result)) {
-			for ($i=0; $i<$num_campos-1;$i++){
-				 echo "Author: $row[$i]";
-				 echo "\n";
+			for ($i=0; $i<$num_campos-1;$i+=2){
+				$nom_campos= pg_field_name($result,$i);
+				echo '<div class="row">';
+
+				echo '<div class="col-xs-2 text-right" style="padding-right: 0px">';
+				echo "<b> $nom_campos: </b>";
+				echo '</div>';
+				echo '<div class="col-xs-4" style="padding-left: 8px">';
+				echo $row[$i];
+				echo '</div>';
+
+				$i++;
+				$nom_campos= pg_field_name($result,$i);
+				echo '<div class="col-xs-2 text-right" style="padding-right: 0px">';
+				echo "<b> $nom_campos: </b>";
+				echo '</div>';
+				echo '<div class="col-xs-4" style="padding-left: 8px">';
+				echo $row[$i];
+				echo '</div>';
+
+				echo '</div>';
 			}
 		}
 	}

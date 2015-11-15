@@ -34,3 +34,7 @@
 .tooltip-static:before {
   border-top-color: #ffcc33;
 }
+
+.modal-wide .modal-dialog {
+  width: 65%; /* or whatever you wish */
+}

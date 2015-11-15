@@ -159,7 +159,24 @@ function clickEnMapa(evt) {
                 coordY: evt.coordinate[1],
             }
         }).done(function( msg ) {
-        alert( "Los datos que se recibieron: " + msg );
+        //alert( "Los datos que se recibieron: " + msg );
+        $('#modalConsulta').modal('show');
+        body_modal= document.getElementById('modal-body');
+        body_modal.innerHTML=msg;
+
+        lista_capas= document.getElementById('lista_capas');
+        var lista;
+        capa_activa= $(".dropdown-menu").find(".active").attr('value');
+        $("input[type=checkbox]:checked").each(function(){
+            //alert($(this).val());
+            if ($(this).val()==capa_activa) {
+                lista+= "<option selected value="+$(this).val()+">"+ $(this).val()+"</option>";
+            }else{
+                lista+= "<option value="+$(this).val()+">"+ $(this).val()+"</option>";
+            }
+        });
+        lista_capas.innerHTML= lista;
+        
     });
 
 
