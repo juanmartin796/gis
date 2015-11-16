@@ -20,8 +20,8 @@ function dibujarCapas(){
                     visible: false,
                         source: new ol.source.ImageWMS({//fuente de datos (ImageWMS)
                             url: '/cgi-bin/qgis_mapserv.fcgi?map=/var/www/html/webgis/qgis/TPI.qgs',
-
-                        params: {LAYERS: capability[i].Name}//por defecto version WMS = 1.3.0
+                            params: {LAYERS: capability[i].Name},
+                            serverType:'qgis'//por defecto version WMS = 1.3.0
                         })
                 }));
             }
@@ -50,6 +50,8 @@ function agregarCapas(capas){
             })
           })
         ];*/
+
+
 
 // creo un objeto mapa de la clase ol.Map y lo asigno a una variable llamada map
     map = new ol.Map({// el constructor de la clase ol.Map toma como parametro un obj. con la configuracion
@@ -180,6 +182,23 @@ var coordX;
 var coordY;
 
 function clickEnMapa(evt) {
+
+    var url = capas[25].getSource().getGetFeatureInfoUrl(
+      evt.coordinate,
+      //map.getView().getResolution(),
+      0.01, //la resolucion. Cuando agrande la vision de los puntos al cambiar de escala, puedo poner la resolusion actual
+      'EPSG:4326',
+      {
+         'INFO_FORMAT': 'text/html',
+         //'FEATURE_COUNT': '20' //or whatever you want
+      }
+    );
+    alert('localhost'+url);
+
+
+
+
+
     //muestro por consola las coordenadas del evento
     console.log('click',evt.coordinate);
     //alert(evt.coordinate[1]);
