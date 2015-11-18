@@ -144,6 +144,7 @@ function act_des_capas(){
 selectInteraction.on('boxend', function (evt) {
     //this: referencia al selectInteraction
     console.log('boxend', this.getGeometry().getCoordinates());
+    
 
 });
 
@@ -181,15 +182,30 @@ function control_consulta_navegacion(el){
 var coordX;
 var coordY;
 
+var url;
+var texto_consulta;
+var coordenadas;
 function clickEnMapa(evt) {
+    coordenadas= evt.coordinate
+    texto_consulta='';
 
-    var url = capas[25].getSource().getGetFeatureInfoUrl(
+    //var url = capas[25].getSource().getGetFeatureInfoUrl(
+
+        //obtengo el objeto capa que se encuentra activa actual
+    for (i=0; i<capas.length; i++){
+        if (capas[i].get('title')== capa_activa){
+            capa_objeto_activa =capas[i];
+        }
+    }
+
+    url = capa_objeto_activa.getSource().getGetFeatureInfoUrl(
       evt.coordinate,
       //map.getView().getResolution(),
       0.01, //la resolucion. Cuando agrande la vision de los puntos al cambiar de escala, puedo poner la resolusion actual
       'EPSG:4326',
       {
-         'INFO_FORMAT': 'text/html',
+         //'INFO_FORMAT': 'text/html',
+         'INFO_FORMAT':  'text/xml', //pueden ser 'text/plain', 'text/html' or 'text/xml'
          //'FEATURE_COUNT': '20' //or whatever you want
       }
     );
@@ -197,12 +213,47 @@ function clickEnMapa(evt) {
 
 
 
+    $.ajax({
+      async:false,
+      type: "GET",
+      dataType: "xml",
+      url: url,
+      success: function(xml){
+        band_fila=true;
+       $(xml).find("Attribute").each(function(){
+            if ($(this).attr("name")!='geom'){
+                if (band_fila==true){
+                    texto_consulta+='<div class="row">';
+                }
+                texto_consulta+='<div class="col-xs-2 text-right" style="padding-right: 0px">'+
+                '<b>'+$(this).attr("name")+': </b>'+
+                '</div>'+
+                '<div class="col-xs-4" style="padding-left: 8px">'+
+                $(this).attr("value")+
+                '</div>';
+                if (band_fila==true){
+                    band_fila=false;
+                } else{
+                    band_fila=true;
+                }
+                if (band_fila==true){
+                    texto_consulta+='</div>';
+                }
+                //texto_consulta+='<strong>'+$(this).attr("name")+': </strong>'+$(this).attr("value")+ '<br>';
+            }
+
+        });
+        }
+    });
+
+
+    mostrar_vent_consulta(texto_consulta);
 
 
     //muestro por consola las coordenadas del evento
     console.log('click',evt.coordinate);
     //alert(evt.coordinate[1]);
-    coordX= evt.coordinate[0];
+    /*coordX= evt.coordinate[0];
     coordY=evt.coordinate[1];
 
     $.ajax({
@@ -217,13 +268,17 @@ function clickEnMapa(evt) {
             //alert( "Los datos que se recibieron: " + msg );
             mostrar_vent_consulta(msg);
         
-    });
+    });*/
 };
 
 function mostrar_vent_consulta(msg){
     $('#modalConsulta').modal('show');
         body_modal= document.getElementById('modal-body');
+        //body_modal.innerHTML=msg;
+        //body_modal.innerHTML=texto_consulta;
         body_modal.innerHTML=msg;
+        //iframe_consulta= document.getElementById('iframe_consulta');
+        //iframe_consulta.src=url;
 
         lista_capas= document.getElementById('lista_capas');
         var lista;
@@ -240,7 +295,7 @@ function mostrar_vent_consulta(msg){
 }
 
 function refrescar_vent_modal(capa_activa){
-    $.ajax({
+    /*$.ajax({
         type: "POST",
         url: "realizar_consulta.php",
         data: { 
@@ -252,7 +307,61 @@ function refrescar_vent_modal(capa_activa){
             //alert( "Los datos que se recibieron: " + msg );
             mostrar_vent_consulta_cambiar_capa(capa_activa, msg);
         
+    });*/
+
+    for (i=0; i<capas.length; i++){
+        if (capas[i].get('title')== capa_activa){
+            capa_objeto_activa =capas[i];
+        }
+    }
+    
+    url = capa_objeto_activa.getSource().getGetFeatureInfoUrl(
+      coordenadas,
+      //map.getView().getResolution(),
+      0.01, //la resolucion. Cuando agrande la vision de los puntos al cambiar de escala, puedo poner la resolusion actual
+      'EPSG:4326',
+      {
+         //'INFO_FORMAT': 'text/html',
+         'INFO_FORMAT':  'text/xml', //pueden ser 'text/plain', 'text/html' or 'text/xml'
+         //'FEATURE_COUNT': '20' //or whatever you want
+      }
+    );
+
+    texto_consulta='';
+     $.ajax({
+      async:false,
+      type: "GET",
+      dataType: "xml",
+      url: url,
+      success: function(xml){
+        band_fila=true;
+       $(xml).find("Attribute").each(function(){
+            if ($(this).attr("name")!='geom'){
+                if (band_fila==true){
+                    texto_consulta+='<div class="row">';
+                }
+                texto_consulta+='<div class="col-xs-2 text-right" style="padding-right: 0px">'+
+                '<b>'+$(this).attr("name")+': </b>'+
+                '</div>'+
+                '<div class="col-xs-4" style="padding-left: 8px">'+
+                $(this).attr("value")+
+                '</div>';
+                if (band_fila==true){
+                    band_fila=false;
+                } else{
+                    band_fila=true;
+                }
+                if (band_fila==true){
+                    texto_consulta+='</div>';
+                }
+            }
+
+        });
+        }
     });
+
+
+    mostrar_vent_consulta_cambiar_capa(capa_activa, texto_consulta);
 }
 
 function mostrar_vent_consulta_cambiar_capa(capa_actual, msg){
