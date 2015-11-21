@@ -2,6 +2,10 @@ var capas=[];
 var nombre_capas;
 var capa_activa;
 var map;
+var modify;
+var draw2;
+var features;
+var featureOverlay;
 
 function dibujarCapas(){
 
@@ -85,7 +89,17 @@ function agregarCapas(capas){
             scaleLineControl
           ])
     });
+
+    init();
 }
+
+function addInteraction(tipo) {
+      draw2 = new ol.interaction.Draw({
+        features: features,
+        type: /** @type {ol.geom.GeometryType} */ (tipo)
+      });
+      //map.addInteraction(draw2);
+    }
 
 function obtenerArregloCapas(){
     return capas;
@@ -94,7 +108,7 @@ function obtenerArregloCapas(){
 function crear_checkbox_capas(){
     nombre_capas= obtenerCapas();
     for(var i = 0; i < nombre_capas.length; i ++){
-        document.write('<li value="'+nombre_capas[i]+'"> <a href="#"> <input type="checkbox" name='+nombre_capas[i]+' id="checkbox_'+nombre_capas[i]+'" value="'+ nombre_capas[i]+'">'+nombre_capas[i]+'</a></li>');
+        document.write('<li value="'+nombre_capas[i]+'"> <a href="javascript:void(0)"> <input type="checkbox" name='+nombre_capas[i]+' id="checkbox_'+nombre_capas[i]+'" value="'+ nombre_capas[i]+'">'+nombre_capas[i]+'</a></li>');
     }
 }
 
@@ -144,6 +158,29 @@ function act_des_capas(){
 selectInteraction.on('boxend', function (evt) {
     //this: referencia al selectInteraction
     console.log('boxend', this.getGeometry().getCoordinates());
+
+    var coordinate= this.getGeometry().getCoordinates();
+    //es un poligono en la forma [ [ [lon,lat],[lon,lat],....] ]
+    var wkt = 'POLYGON((';
+    for(var i=0;i<coordinate[0].length - 1;i++){
+        wkt+=coordinate[0][i][0]+ ' ' + coordinate[0][i][1]+ ',';
+    }
+    wkt+=coordinate[0][0][0]+' '+coordinate[0][0][1]+'))';
+    alert(wkt);
+
+    $.ajax({
+        type: "POST",
+        url: "php/realizar_consulta_rectangulo.php",
+        data: { 
+                nom_capa: capa_activa,
+                wkt: wkt
+            }
+    }).done(function( msg ) {
+            alert( "Los datos que se recibieron: " + msg );
+            mostrar_vent_consulta(msg);
+        
+    });
+    //window.open('consulta.php?wkt='+wkt);return; 
     
 
 });
@@ -163,14 +200,20 @@ function control_consulta_navegacion(el){
         //la remuevo...
         map.removeInteraction(selectInteraction);
         map.removeInteraction(draw);
+        map.removeInteraction(modify);
+        map.removeInteraction(draw2);
         //remueveo la subscripcion de la funcion al evento click del mapa
         map.un('click', clickEnMapa);
         borrar_lineas_medicion();
     } else if (el.title=="medicion"){
+         borrar_lineas_medicion();
          map.removeInteraction(selectInteraction);
+         map.removeInteraction(modify);
+         map.removeInteraction(draw2);
          map.un('click', clickEnMapa);
          medir_distancia();
          map.addInteraction(draw);
+
 
 
     }
@@ -185,6 +228,7 @@ var coordY;
 var url;
 var texto_consulta;
 var coordenadas;
+
 function clickEnMapa(evt) {
     coordenadas= evt.coordinate
     texto_consulta='';
@@ -314,7 +358,6 @@ function refrescar_vent_modal(capa_activa){
             capa_objeto_activa =capas[i];
         }
     }
-    
     url = capa_objeto_activa.getSource().getGetFeatureInfoUrl(
       coordenadas,
       //map.getView().getResolution(),
@@ -326,7 +369,6 @@ function refrescar_vent_modal(capa_activa){
          //'FEATURE_COUNT': '20' //or whatever you want
       }
     );
-
     texto_consulta='';
      $.ajax({
       async:false,
@@ -359,8 +401,6 @@ function refrescar_vent_modal(capa_activa){
         });
         }
     });
-
-
     mostrar_vent_consulta_cambiar_capa(capa_activa, texto_consulta);
 }
 
@@ -384,6 +424,23 @@ function mostrar_vent_consulta_cambiar_capa(capa_actual, msg){
 
 function borrar_lineas_medicion(){
     map.removeLayer(vector);
+    map.removeLayer(featureOverlay);
+    //map.removeOverlay(featureOverlay);
     map.getOverlays().clear();
+}
+
+
+
+function agregarElementosCapa(tipo){
+    map.removeLayer(vector);
+    map.getOverlays().clear();
+
+    map.un('click', clickEnMapa);
+    //map.addInteraction(modify);
+    //map.removeInteraction(draw2);
+    map.removeInteraction(draw);
+    //addInteraction(tipo);
+    //map.addInteraction(draw2);
+    agregar(tipo);
 }
 

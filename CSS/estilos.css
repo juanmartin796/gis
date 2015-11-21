@@ -47,5 +47,24 @@
   fill: currentColor;
 }
 
+#modal-body{
+  display: block;
+  overflow: auto;
+  max-height: 400px;
+}
+
+ .table td {
+  white-space:nowrap;
+ }
+
+ #modalAgregar{
+   width: 50%;
+   position: absolute;
+   top: 20%;
+   left: 58%;
+
+ }
+
+
 
 

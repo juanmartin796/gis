@@ -63,4 +63,59 @@
 			}
 		}
 	}
+
+	function consulta_por_rectangulo($tabla, $wkt){
+		GLOBAL $db;
+			$result = pg_query($db,"
+				SELECT * FROM $tabla 
+				WHERE 
+					st_intersects(
+					ST_geomfromtext('$wkt',4326),
+					geom
+					)
+				");
+		if (!$result) {
+		  echo "An error occurred.\n";
+		  exit;
+		}
+
+		$nro_campos = pg_num_fields($result);
+		$nro_registros = pg_num_rows($result);
+
+		$header = '<tr>';
+		while ($i < $nro_campos) { 
+			$fieldName = pg_field_name($result, $i); 
+			
+			if($fieldName!='geom'){
+				$header.= '<th>' . $fieldName .'</td>'; 
+			}
+			$i++; 
+			
+		}
+		$header .= '</tr>';
+
+		$cuerpo='';
+		while ($row = pg_fetch_row($result)) { 
+			$cuerpo.= '<tr>'; 
+			$count = count($row); 
+			$i=0;
+			while ($i < $nro_campos) {
+				 if(pg_field_name($result, $i)!='geom'){
+					 $cuerpo.= '<td>' . $row[$i] . '</td>';
+				}
+				$i++;
+			}
+			$cuerpo.= '</tr>';
+		}
+		echo '<div class="">';
+		echo '<table class="table">';
+			echo "<thead>";
+				echo $header;
+			echo "</thead>";
+			echo "<tdoby>";
+				echo $cuerpo;
+			echo "</tbody>";
+		echo "</table>";
+		echo '</div>' ;
+	}
 ?>
