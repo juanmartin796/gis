@@ -2,8 +2,8 @@
 	$db;
 
 	function conectar_db(){
-
 	   $host        = "host=localhost";
+    	//$host 		= "host=". $_SERVER['HTTP_HOST'];
 	   $port        = "port=5432";
 	   $dbname      = "dbname=gis_db";
 	   $credentials = "user=gis_user password=gis_user";

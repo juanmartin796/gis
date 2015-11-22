@@ -443,4 +443,3 @@ function agregarElementosCapa(tipo){
     //map.addInteraction(draw2);
     agregar(tipo);
 }
-

@@ -175,8 +175,8 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-					<button type="button" class="btn btn-primary">Guardar</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="javascript:cancelarInsercion()">Cancelar</button>
+					<button type="button" class="btn btn-primary" onclick="javascript:guardarInsercion()">Guardar</button>
 				</div>
 			</div>
 		</div>

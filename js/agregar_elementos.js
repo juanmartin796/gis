@@ -56,7 +56,9 @@ function addInteraction(tipo) {
 	    type: /** @type {ol.geom.GeometryType} */ (tipo)
 	  });
 	  map.addInteraction(draw2);
-	} 
+	  draw2.on('drawend', mostrar_vent_agregar);
+
+}
 
 function agregar(tipo){
 	existe_capa_feature=false;
@@ -72,11 +74,9 @@ function agregar(tipo){
 	map.addInteraction(modify);
 	map.removeInteraction(draw2);
 	addInteraction(tipo);
-
-	mostrar_vent_agregar('hola');
 }
 
-function mostrar_vent_agregar(msg){
+function mostrar_vent_agregar(){
     $('#modalAgregar').modal('show');
     $('.modal-backdrop').removeClass("modal-backdrop"); 
         body_modal= document.getElementById('modal_body_agregar');
@@ -86,4 +86,29 @@ function mostrar_vent_agregar(msg){
         //iframe_consulta= document.getElementById('iframe_consulta');
         //iframe_consulta.src=url;
 
+}
+
+var ultimoFeature;
+function guardarInsercion(){
+	$('#modalAgregar').modal('hide');
+
+	featureDibujados= featureOverlay.getSource();
+	featureDibujados.forEachFeature(
+		function(feature){
+     		ultimoFeature=feature;
+    	}
+	);
+ 	var coordinate = ultimoFeature.getGeometry().getCoordinates();
+   	alert(coordinate);
+
+}
+
+function cancelarInsercion(){
+	featureDibujados= featureOverlay.getSource();
+	featureDibujados.forEachFeature(
+		function(feature){
+     		ultimoFeature=feature;
+    	}
+	);
+	featureDibujados.removeFeature(ultimoFeature);
 }
