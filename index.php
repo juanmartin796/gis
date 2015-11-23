@@ -44,7 +44,7 @@
 									</script>
 								</ul>
 							</li>
-							<li id="li_navegacion" class="active pestana">
+							<li id="li_navegacion" class="active pestana" title="navegacion" href="#" onclick="javascript:control_consulta_navegacion(this)">
 								<a class=" btn btn-default btn-lg" title="navegacion" href="#" onclick="javascript:control_consulta_navegacion(this)">
 									<span class="glyphicon glyphicon-move" aria-hidden="true"></span> 
 								</a>
@@ -145,8 +145,8 @@
 					...
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-					<button type="button" class="btn btn-primary">Guardar</button>
+<!-- 					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+ -->					<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
 				</div>
 			</div>
 		</div>

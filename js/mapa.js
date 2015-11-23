@@ -154,19 +154,21 @@ function act_des_capas(){
                 }
 );
 
-
+var wkt;
+var coordinate;
 selectInteraction.on('boxend', function (evt) {
     //this: referencia al selectInteraction
     console.log('boxend', this.getGeometry().getCoordinates());
 
-    var coordinate= this.getGeometry().getCoordinates();
+    coordinate= this.getGeometry().getCoordinates();
+    coordenadas= this.getGeometry().getCoordinates();
     //es un poligono en la forma [ [ [lon,lat],[lon,lat],....] ]
-    var wkt = 'POLYGON((';
+    wkt = 'POLYGON((';
     for(var i=0;i<coordinate[0].length - 1;i++){
         wkt+=coordinate[0][i][0]+ ' ' + coordinate[0][i][1]+ ',';
     }
     wkt+=coordinate[0][0][0]+' '+coordinate[0][0][1]+'))';
-    alert(wkt);
+    //alert(wkt);
 
     $.ajax({
         type: "POST",
@@ -176,7 +178,7 @@ selectInteraction.on('boxend', function (evt) {
                 wkt: wkt
             }
     }).done(function( msg ) {
-            alert( "Los datos que se recibieron: " + msg );
+            //alert( "Los datos que se recibieron: " + msg );
             mostrar_vent_consulta(msg);
         
     });
@@ -191,6 +193,8 @@ function control_consulta_navegacion(el){
         //la cual tiene precedencia sobre las otras
         map.addInteraction(selectInteraction);
         map.removeInteraction(draw);
+        map.removeInteraction(modify);
+        map.removeInteraction(draw2);
 
         //subscribo una funcion al evento click del mapa
         map.on('click', clickEnMapa);
@@ -253,7 +257,7 @@ function clickEnMapa(evt) {
          //'FEATURE_COUNT': '20' //or whatever you want
       }
     );
-    alert('localhost'+url);
+    //alert('localhost'+url);
 
 
 
@@ -339,69 +343,76 @@ function mostrar_vent_consulta(msg){
 }
 
 function refrescar_vent_modal(capa_activa){
-    /*$.ajax({
-        type: "POST",
-        url: "realizar_consulta.php",
-        data: { 
-                nom_capa: capa_activa,
-                coordX: coordX,
-                coordY: coordY,
+    if (coordenadas.length==1){ //actualiza la ventana cuando es por seleccion de rectangulo
+        for (i=0; i<capas.length; i++){
+            if (capas[i].get('title')== capa_activa){
+                capa_objeto_activa =capas[i];
             }
-    }).done(function( msg ) {
-            //alert( "Los datos que se recibieron: " + msg );
-            mostrar_vent_consulta_cambiar_capa(capa_activa, msg);
-        
-    });*/
-
-    for (i=0; i<capas.length; i++){
-        if (capas[i].get('title')== capa_activa){
-            capa_objeto_activa =capas[i];
         }
-    }
-    url = capa_objeto_activa.getSource().getGetFeatureInfoUrl(
-      coordenadas,
-      //map.getView().getResolution(),
-      0.01, //la resolucion. Cuando agrande la vision de los puntos al cambiar de escala, puedo poner la resolusion actual
-      'EPSG:4326',
-      {
-         //'INFO_FORMAT': 'text/html',
-         'INFO_FORMAT':  'text/xml', //pueden ser 'text/plain', 'text/html' or 'text/xml'
-         //'FEATURE_COUNT': '20' //or whatever you want
-      }
-    );
-    texto_consulta='';
-     $.ajax({
-      async:false,
-      type: "GET",
-      dataType: "xml",
-      url: url,
-      success: function(xml){
-        band_fila=true;
-       $(xml).find("Attribute").each(function(){
-            if ($(this).attr("name")!='geom'){
-                if (band_fila==true){
-                    texto_consulta+='<div class="row">';
+        $.ajax({
+            type: "POST",
+            url: "php/realizar_consulta_rectangulo.php",
+            data: { 
+                    nom_capa: capa_activa,
+                    wkt: wkt
                 }
-                texto_consulta+='<div class="col-xs-2 text-right" style="padding-right: 0px">'+
-                '<b>'+$(this).attr("name")+': </b>'+
-                '</div>'+
-                '<div class="col-xs-4" style="padding-left: 8px">'+
-                $(this).attr("value")+
-                '</div>';
-                if (band_fila==true){
-                    band_fila=false;
-                } else{
-                    band_fila=true;
-                }
-                if (band_fila==true){
-                    texto_consulta+='</div>';
-                }
-            }
-
+        }).done(function( msg ) {
+                //alert( "Los datos que se recibieron: " + msg );
+                mostrar_vent_consulta_cambiar_capa(capa_activa, msg);
+            
         });
+    } else {
+
+        for (i=0; i<capas.length; i++){
+            if (capas[i].get('title')== capa_activa){
+                capa_objeto_activa =capas[i];
+            }
         }
-    });
-    mostrar_vent_consulta_cambiar_capa(capa_activa, texto_consulta);
+        url = capa_objeto_activa.getSource().getGetFeatureInfoUrl(
+          coordenadas,
+          //map.getView().getResolution(),
+          0.01, //la resolucion. Cuando agrande la vision de los puntos al cambiar de escala, puedo poner la resolusion actual
+          'EPSG:4326',
+          {
+             //'INFO_FORMAT': 'text/html',
+             'INFO_FORMAT':  'text/xml', //pueden ser 'text/plain', 'text/html' or 'text/xml'
+             //'FEATURE_COUNT': '20' //or whatever you want
+          }
+        );
+        texto_consulta='';
+         $.ajax({
+          async:false,
+          type: "GET",
+          dataType: "xml",
+          url: url,
+          success: function(xml){
+            band_fila=true;
+           $(xml).find("Attribute").each(function(){
+                if ($(this).attr("name")!='geom'){
+                    if (band_fila==true){
+                        texto_consulta+='<div class="row">';
+                    }
+                    texto_consulta+='<div class="col-xs-2 text-right" style="padding-right: 0px">'+
+                    '<b>'+$(this).attr("name")+': </b>'+
+                    '</div>'+
+                    '<div class="col-xs-4" style="padding-left: 8px">'+
+                    $(this).attr("value")+
+                    '</div>';
+                    if (band_fila==true){
+                        band_fila=false;
+                    } else{
+                        band_fila=true;
+                    }
+                    if (band_fila==true){
+                        texto_consulta+='</div>';
+                    }
+                }
+
+            });
+            }
+        });
+        mostrar_vent_consulta_cambiar_capa(capa_activa, texto_consulta);
+    }
 }
 
 function mostrar_vent_consulta_cambiar_capa(capa_actual, msg){
