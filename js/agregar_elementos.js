@@ -53,7 +53,7 @@ function init(){
 var tipo_geometria;
 function addInteraction(tipo) {
 	tipo_geometria=tipo;
-	alert(tipo);
+	//alert(tipo);
 	  draw2 = new ol.interaction.Draw({
 	    features: features,
 	    type: /** @type {ol.geom.GeometryType} */ (tipo)
@@ -102,7 +102,7 @@ function guardarInsercion(){
     	}
 	);
  	var coordinate = ultimoFeature.getGeometry().getCoordinates();
-   	alert(coordinate);
+   	//alert(coordinate);
 
    	if (tipo_geometria=='Point'){
    		var wkt='POINT('+coordinate[0]+' ' +coordinate[1]+')';
@@ -121,12 +121,13 @@ function guardarInsercion(){
 		}
 		wkt+=coordinate[0][0][0]+' '+coordinate[0][0][1]+'))'
 	}
-	alert(wkt);
+	//alert(wkt);
 
 	inputText_nombre= $("#inputText_nombre").val();
 	inputText_tipo= $("#inputText_tipo").val();
 
 	$.ajax({
+		async:false,
         type: "GET",
         url: "php/insertarElemento.php",
         data: { 
@@ -136,9 +137,22 @@ function guardarInsercion(){
                 coordenadas: wkt
             }
     }).done(function( msg ) {
-            alert( "Los datos que se recibieron: " + msg );
+            alert( msg );
         
     });
+	
+	//para actualizar el mapa despues de agregar el elemento a la base de datos
+	map.getLayers().forEach(function(elm, i, arreglo){
+			if(elm.get('title')=='capadeusuario_point' || elm.get('title')=='capadeusuario_linestring' || 
+				elm.get('title')=='capadeusuario_polygon'){
+				var params = elm.getSource().getParams();
+	            params.t = new Date().getMilliseconds();
+	            elm.getSource().updateParams(params); 
+			}
+		});
+
+	//para eliminar el feature dibujado temporalmente en el mapa
+	cancelarInsercion();
 
 }
 

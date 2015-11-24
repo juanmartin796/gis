@@ -15,7 +15,7 @@
 	$cadenaConexion = "host=$host port=$port dbname=$dbname user=$usuario password=$contrasenia";
 
 	$conexion = pg_connect($cadenaConexion) or die("Error en la Conexión: ".pg_last_error());
-	echo "<h3>Conexion Exitosa PHP - PostgreSQL</h3><hr><br>";
+	//echo "<h3>Conexion Exitosa PHP - PostgreSQL</h3><hr><br>";
 
 	$query = "insert into $capa (nombre, tipo, geom) values ('$nombreElemento','$tipo',  ST_geomfromtext('$coordenadas', 4326))";
 
