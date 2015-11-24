@@ -50,7 +50,10 @@ function init(){
 	//addInteraction();
 }
 
+var tipo_geometria;
 function addInteraction(tipo) {
+	tipo_geometria=tipo;
+	alert(tipo);
 	  draw2 = new ol.interaction.Draw({
 	    features: features,
 	    type: /** @type {ol.geom.GeometryType} */ (tipo)
@@ -100,6 +103,42 @@ function guardarInsercion(){
 	);
  	var coordinate = ultimoFeature.getGeometry().getCoordinates();
    	alert(coordinate);
+
+   	if (tipo_geometria=='Point'){
+   		var wkt='POINT('+coordinate[0]+' ' +coordinate[1]+')';
+   	} else if (tipo_geometria=='LineString'){
+   		var wkt = 'LINESTRING(';
+   		for (var i=0; i<coordinate.length-1; i++){
+   			wkt+=coordinate[i][0]+' '+ coordinate[i][1]+',';
+   		}
+   		wkt+= coordinate[i][0]+' '+coordinate[i][1]+')';
+	}else{
+		//es un poligono en la forma [ [ [lon,lat],[lon,lat],....] ]
+		var wkt = 'POLYGON((';
+		//var wkt = tipo_geometria+'((';
+		for(var i=0;i<coordinate[0].length - 1;i++){
+			wkt+=coordinate[0][i][0]+ ' ' + coordinate[0][i][1]+ ',';
+		}
+		wkt+=coordinate[0][0][0]+' '+coordinate[0][0][1]+'))'
+	}
+	alert(wkt);
+
+	inputText_nombre= $("#inputText_nombre").val();
+	inputText_tipo= $("#inputText_tipo").val();
+
+	$.ajax({
+        type: "GET",
+        url: "php/insertarElemento.php",
+        data: { 
+        		capa: 'capadeusuario_'+tipo_geometria,
+                nombreElemento: inputText_nombre,
+                tipo: inputText_tipo,
+                coordenadas: wkt
+            }
+    }).done(function( msg ) {
+            alert( "Los datos que se recibieron: " + msg );
+        
+    });
 
 }
 

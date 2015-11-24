@@ -163,13 +163,13 @@
 						  <div class="form-group">
 						    <label class="control-label col-sm-2" for="email">Nombre:</label>
 						    <div class="col-sm-10">
-						      <input type="text" class="form-control" id="text" placeholder="Ingrese nombre">
+						      <input type="text" class="form-control" id="inputText_nombre" placeholder="Ingrese nombre">
 						    </div>
 						  </div>
 						  <div class="form-group">
 						    <label class="control-label col-sm-2" for="pwd">Tipo:</label>
 						    <div class="col-sm-10">
-						      <input type="text" class="form-control" id="tipo" placeholder="Ingrese tipo">
+						      <input type="text" class="form-control" id="inputText_tipo" placeholder="Ingrese tipo">
 						    </div>
 						  </div>
 					</form>
