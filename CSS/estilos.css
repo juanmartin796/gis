@@ -65,6 +65,17 @@
 
  }
 
+#div_legend{
+  position: absolute;
+  top: 120px;
+  right: 10px;
+  width: 300px;
+  max-height: 500px;
+  border: solid 1px;
+}
 
+#div_legend:hover { 
+  overflow:auto; 
+}
 
 

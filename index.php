@@ -182,6 +182,10 @@
 		</div>
 	</div>
 
+	<div id="div_legend">
+		<img class='' id="legend">
+ 	</div>
+
 <!--<script type="text/javascript" src="js/capas.js"></script> -->
 <script type="text/javascript" src="lib/bootstrap/js/bootstrap.js"></script>
 </body>

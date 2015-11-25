@@ -7,6 +7,8 @@ var draw2;
 var features;
 var featureOverlay;
 
+var capas_visibles=[];
+
 function dibujarCapas(){
 
   var parser = new ol.format.WMSCapabilities();
@@ -134,10 +136,26 @@ function act_des_capas(){
                 if (visible !== document.getElementById("checkbox_"+nombre_de_esta_capa).checked) {
                     document.getElementById("checkbox_"+nombre_de_esta_capa).checked = visible;
                 }
+
+
+                //para la leyenda, agrego la capa visible al array, para luego hacer el getlegendgraphic
+                if (this.getVisible()==true){
+                    capas_visibles.push(this.get('title'));
+                    var url= "http://localhost/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&MAP=/var/www/html/webgis/qgis/TPI.qgs&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER="
+                                        +capas_visibles;
+                    $('#legend').attr("src", url);
+
+                } else{
+                    var index = capas_visibles.indexOf(this.get('title'));
+                    if (index > -1) {
+                        capas_visibles.splice(index, 1);
+                    }
+                    var url= "http://localhost/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&MAP=/var/www/html/webgis/qgis/TPI.qgs&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=10&HEIGHT=10&LAYER="
+                                        +capas_visibles;
+                    $('#legend').attr("src", url);
+                }
             });
-
-
-        };
+        }
 }
 
 

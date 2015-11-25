@@ -10,7 +10,7 @@ function init(){
 	  source: new ol.source.Vector({features: features}),
 	  style: new ol.style.Style({
 	    fill: new ol.style.Fill({
-	      color: 'rgba(255, 255, 255, 0.2)'
+	      color: 'rgba(255, 204, 51, 0.3)'
 	    }),
 	    stroke: new ol.style.Stroke({
 	      color: '#ffcc33',
@@ -74,7 +74,7 @@ function agregar(tipo){
 	if (existe_capa_feature==false){
 		init();
 	}
-	map.addInteraction(modify);
+	//map.addInteraction(modify);
 	map.removeInteraction(draw2);
 	addInteraction(tipo);
 }
