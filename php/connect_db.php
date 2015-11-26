@@ -72,6 +72,7 @@
 					ST_geomfromtext('$wkt',4326),
 					geom
 					)
+				LIMIT 200
 				");
 		if (!$result) {
 		  echo "An error occurred.\n";

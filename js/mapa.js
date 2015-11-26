@@ -114,6 +114,27 @@ function crear_checkbox_capas(){
     }
 }
 
+function obtenerCapas(){
+    var capa2=[];
+
+    var parser = new ol.format.WMSCapabilities();
+    $.ajax({async:false, 
+        url:'/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&MAP=/var/www/html/webgis/qgis/TPI.qgs&REQUEST=GetCapabilities'}).then(function(response) {
+
+            var result = parser.read(response);
+  //$('#log').html(window.JSON.stringify(result, null, 2));
+
+  var capability = result.Capability.Layer.Layer;
+  //$('#log').html(window.JSON.stringify(capability, null, 2));
+  for(var i = 0; i < capability.length; i ++){
+    capa2.push(capability[i].Name);
+  }
+  
+    });
+    return capa2;
+}
+
+
 function act_des_capas(){
     var capas_del_mapa= obtenerArregloCapas();
 
@@ -141,7 +162,7 @@ function act_des_capas(){
                 //para la leyenda, agrego la capa visible al array, para luego hacer el getlegendgraphic
                 if (this.getVisible()==true){
                     capas_visibles.push(this.get('title'));
-                    var url= "http://localhost/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&MAP=/var/www/html/webgis/qgis/TPI.qgs&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER="
+                    var url= "http://localhost/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&MAP=/var/www/html/webgis/qgis/TPI.qgs&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYERFONTSIZE=9&ITEMFONTSIZE=8&LAYERFONTBOLD=TRUE&LAYER="
                                         +capas_visibles;
                     $('#legend').attr("src", url);
 
@@ -150,7 +171,7 @@ function act_des_capas(){
                     if (index > -1) {
                         capas_visibles.splice(index, 1);
                     }
-                    var url= "http://localhost/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&MAP=/var/www/html/webgis/qgis/TPI.qgs&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=10&HEIGHT=10&LAYER="
+                    var url= "http://localhost/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&MAP=/var/www/html/webgis/qgis/TPI.qgs&REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=10&HEIGHT=10&LAYERFONTSIZE=9&ITEMFONTSIZE=8&LAYERFONTBOLD=TRUE&LAYER="
                                         +capas_visibles;
                     $('#legend').attr("src", url);
                 }
